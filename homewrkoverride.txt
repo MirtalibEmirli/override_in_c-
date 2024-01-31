@@ -1,0 +1,230 @@
+
+#include <iostream>
+#include <cassert>
+#include <vector>
+using namespace std;
+
+class Ford {
+
+protected:
+	string* _marka;
+	string* _model;
+	
+
+public:
+
+	Ford(string* marka, string* model) {
+		if (model != nullptr) _model = new string(*model);
+		else
+		assert(!"NULL in model");
+		if (marka != nullptr) _marka = new string(*marka);
+
+		else
+			assert(!"NULL in marka");
+
+	}
+
+	void Printmodel() { 
+		cout << "MODEL =>" << *_model << endl; 
+
+	}
+
+	virtual string Getinterior() {
+		 
+		return "Fabrica";
+	}
+
+	virtual int Whellsize() {
+
+		return 1;
+	}
+
+	virtual string GEtwheeltype() {
+
+		return "summer wheel";
+	}
+
+	virtual string Gearbox() {
+		return "roboted";
+	}
+
+
+	virtual void Print() {
+		cout << "MArka => " << *_marka << endl;
+		cout << "Model => " << *_model << endl;
+	}
+	virtual ~Ford() { 
+
+		if (_model != nullptr) delete _model;
+		if (_marka != nullptr) delete _marka;
+	}
+};
+
+class Auto :public Ford{ 
+	int* _gearv;
+	int* _motorvolme;
+
+public:
+
+
+	Auto(string* model,string *marka): Ford(marka,model) {
+		_gearv=nullptr;
+		_motorvolme= nullptr;
+	}
+	
+	Auto(string* model,string *marka, int* gearv, int* motorvolme): Ford(marka,model) {
+		Setmotor(motorvolme);
+		Setvolume(gearv);
+	}
+
+
+	Auto(Auto& o):Ford(o._marka,o._model) {
+		if(o._motorvolme!=nullptr)
+		this->_motorvolme = new int(*o._motorvolme);
+
+		if (o._gearv != nullptr)
+			this->_gearv = new int(*o._gearv);
+
+	}
+	void Setmotor(int* motor) {
+		if (motor != nullptr) { 
+			if (*motor > 1200)
+				_motorvolme = motor;  
+		}
+		else assert(!"Motor volume is wrong");
+	}
+
+	void Setvolume(int* g) {
+		if (g != nullptr) { 
+			if (*g > 3)
+				_gearv = g;  
+		}
+		else assert(!"Gearvolume is wrong");
+	}
+	int Whellsize() {
+		return 16;
+	}
+
+	string GEtwheeltype() {
+
+		return "winter wheel";
+	}
+
+	string Gearbox() {
+		return "auto";
+	}
+
+		
+	void Print()override {
+		Ford::Print();
+		cout << "GEarvolume =>" << *_gearv << endl;
+		cout << "Motorvolime =>" << *_motorvolme << endl;
+	}
+	~Auto() override {
+		if (_motorvolme != nullptr) delete _motorvolme;
+		if (_gearv != nullptr) delete _gearv;
+ 	}
+};
+
+
+class Manual :public Ford {
+
+	int* _TopSpeed;
+	int* _year;
+public:
+
+	Manual(string* model, string* marka) :Ford(marka, model) {
+		_TopSpeed = NULL;
+			_year=NULL;
+
+	}
+	Manual(string* model, string* marka,int*speed,int*year) :Ford(marka, model) {
+		Setspeed(speed);
+		Sety(year);
+	}
+
+	Manual(Manual& o) :Ford(o._marka, o._model) {
+		if (o._year != nullptr)
+			this->_year = new int(*o._year);
+
+		if (o._TopSpeed != nullptr)
+			this->_TopSpeed = new int(*o._TopSpeed);
+
+	}
+
+	void Sety(int* year) {
+		if (year != nullptr) {
+			if (*year > 1200)
+				_year = year;
+		}
+		else assert(!" year  is wrong");
+	}
+
+	void Setspeed(int* TopSpeed) {
+		if (TopSpeed != nullptr) {
+			if (*TopSpeed > 3)
+				_TopSpeed = TopSpeed;
+		}
+		else assert(!"Gearvolume is wrong");
+	}
+	int Whellsize() {
+		return 20;
+	}
+
+	string GEtwheeltype() {
+
+		return "all season wheel";
+	}
+
+	string Gearbox() {
+		return "Manual";
+	}
+	void Print()override {
+		Ford::Print();
+		cout << "Year =>" << *_year << endl;
+		cout << "TopSpeed=>" << *_TopSpeed << endl;
+	}
+
+	~Manual()override{
+	
+		if (_year != nullptr) delete _year;
+
+		if (_TopSpeed != nullptr) delete _TopSpeed;
+	}
+
+
+};
+
+
+void show(Ford* a) {
+	a->Print();
+}
+
+
+
+
+int main() {
+	vector<Ford*> cars;
+
+	cars.push_back(new Auto(new string("BMW"), new string("f30"), new int(7), new int(3200)) );
+	cars.push_back(new Auto(new string("BMW"), new string("f30"), new int(7), new int(3200)) );
+	cars.push_back(new Auto(new string("BMW"), new string("f301"), new int(7), new int(3200)) );
+	cars.push_back(new Auto(new string("BMW"), new string("f58"), new int(7), new int(3200)) );
+	cars.push_back(new Auto(new string("BMW"), new string("f10"), new int(7), new int(3200)) );
+
+	cars.push_back(new Manual(new string("LADA"), new string("2107"), new int(4), new int(2005)) );
+	cars.push_back(new Manual(new string("LADA"), new string("2106"), new int(4), new int(2005)) );
+	cars.push_back(new Manual(new string("LADA"), new string("2109"), new int(4), new int(2005)) );
+	
+
+
+	for (size_t i = 0; i < cars.size(); i++)
+	{
+		cars[i]->Print(); cout << endl;
+	}
+	for (size_t i = 0; i < cars.size(); i++)
+	
+		delete cars[i];
+
+
+}
